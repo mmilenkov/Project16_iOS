@@ -26,6 +26,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         let washington = Capital(title: "Washington Dc", coordinate: CLLocationCoordinate2D(latitude: 38.895111, longitude: -77.036667), info: "'MERIKA FUCK YEAH!")
         mapView.addAnnotations([london,oslo,paris,rome,washington])
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(changeMapType))
     }
 
 
@@ -34,7 +36,8 @@ class ViewController: UIViewController, MKMapViewDelegate {
         
         let identifier = "Capital"
         
-        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier)
+        var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKPinAnnotationView
+        annotationView?.pinTintColor = .red
         
         if annotationView == nil {
             annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
@@ -57,6 +60,22 @@ class ViewController: UIViewController, MKMapViewDelegate {
         let ac = UIAlertController(title: placeName, message: placeInfo, preferredStyle: .alert)
         ac.addAction(UIAlertAction(title: "Ok", style: .default))
         present(ac, animated: true)
+    }
+    
+    @objc func changeMapType() {
+        let ac = UIAlertController(title: "Map Type", message: "What Type would you like to change it to", preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "Satelite", style: .default, handler: setMapTypeSatellite))
+        ac.addAction(UIAlertAction(title: "Standard", style: .default, handler: setMapTypeStandard))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(ac, animated: true)
+    }
+    
+    func setMapTypeSatellite(action: UIAlertAction) {
+        mapView.mapType = .satellite
+    }
+    
+    func setMapTypeStandard(action:UIAlertAction) {
+        mapView.mapType = .standard
     }
 }
 
